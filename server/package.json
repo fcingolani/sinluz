@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start": "node ./bin/server.js",
+    "scrape": "node ./bin/scrape.js",
+    "db:migrate": "./node_modules/.bin/sequelize db:migrate"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^4.0.0",
+    "lodash": "^4.17.4",
+    "moment-timezone": "^0.5.13",
+    "request": "^2.81.0",
+    "restify": "^6.0.0",
+    "sequelize": "^4.8.0",
+    "sequelize-cli": "^3.0.0-2",
+    "sqlite3": "^3.1.9"
+  }
+}
