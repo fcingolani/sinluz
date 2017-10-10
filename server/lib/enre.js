@@ -96,6 +96,8 @@ module.exports = {
       let ultimaActualizacionMoment = moment.tz(ultimaActualizacionRaw, 'HH:mm', 'America/Argentina/Buenos_Aires');
       let ultimaActualizacionStamp = ultimaActualizacionMoment.unix();
 
+      console.log(ultimaActualizacionStamp);
+
       let infoTDs = $('#Informacion_Superior td');
       let usuariosSinServicio = parseInt(infoTDs.first().text().replace(/\D/g, ''));
       let usuariosConServicio = parseInt(infoTDs.last().text().replace(/\D/g, ''));

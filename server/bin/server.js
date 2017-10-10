@@ -1,13 +1,24 @@
-var restify = require('restify');
-var _ = require('lodash');
+let restify = require('restify');
+let bunyan = require('bunyan');
+let _ = require('lodash');
 
-var server = restify.createServer();
+let server = restify.createServer();
 server.use(restify.plugins.gzipResponse());
+server.use(restify.plugins.requestLogger());
 
 server.use((req, res, next) => {
   res.charSet('utf-8');
   next();
 })
+
+let log = bunyan.createLogger({
+  name: 'sinluz'
+});
+
+server.on('after', restify.plugins.auditLogger({
+  log: log,
+  event: 'after'
+}));
 
 let models = require('../models');
 
@@ -18,18 +29,18 @@ server.get('/cortes/activos', (req, res, next) => {
       model: models.Estado
     }]
   })
-    .then(res.send)
-    .catch(res.send)
-    .finally(next);
+    .then((r) => { res.send(r) })
+    .catch((r) => { res.send(r) })
+    .finally(() => { next() });
 
 });
 
 server.get('/ciudades', (req, res, next) => {
 
   models.Ciudad.findAll()
-    .then(res.send)
-    .catch(res.send)
-    .finally(next);
+    .then((r) => { res.send(r) })
+    .catch((r) => { res.send(r) })
+    .finally(() => { next() });
 
 });
 

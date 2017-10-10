@@ -1,16 +1,18 @@
 const path = require('path');
-console.log();
+
+var db_file = process.env.DB_FILE || path.resolve(__dirname, '../db.sqlite');
+
 module.exports = {
   development: {
     dialect: 'sqlite',
-    storage: path.resolve(__dirname, '../local/db.sqlite')
+    storage: db_file
   },
   test: {
     dialect: 'sqlite',
-    storage: process.env.DB_FILE
+    storage: db_file
   },
   production: {
     dialect: 'sqlite',
-    storage: process.env.DB_FILE
+    storage: db_file
   }
 };

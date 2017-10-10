@@ -1,5 +1,7 @@
 ui
 .vscode
 
+**/*.sqlite
+
 **/local
 **/node_modules

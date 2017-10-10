@@ -10,8 +10,7 @@ const models = require('../models');
 
 function generateBlackoutKey(b) {
   return [
-    b.partidoNombre,
-    b.ciudadNombre,
+    b.ciudadId,
     b.subestacionId,
     b.subestacionNombre,
     b.alimentadorId
@@ -36,11 +35,11 @@ async function scrape(distribuidoraNombre) {
 
   for (let b of cortes.data) {
 
+    b.ciudadId = generateCiudadId(b.partidoNombre, b.ciudadNombre);
+
     let k = generateBlackoutKey(b);
 
     if (!activeBlackoutsIndex[k]) {
-
-      let ciudadId = generateCiudadId(b.partidoNombre, b.ciudadNombre);
 
       activeBlackoutsIndex[k] = await models.Corte.create({
         tipo: b.tipo,
@@ -51,7 +50,7 @@ async function scrape(distribuidoraNombre) {
         subestacionNombre: b.subestacionNombre || null,
         alimentadorId: b.alimentadorId || null,
         finishedAt: null,
-        ciudadId: ciudadId
+        ciudadId: b.ciudadId
       }, {
           transaction: t
         });
