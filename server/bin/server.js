@@ -27,7 +27,12 @@ server.get('/cortes/activos', (req, res, next) => {
   models.Corte.findAll({
     include: [{
       model: models.Estado
-    }]
+    }],
+    where: {
+      finishedAt: null
+    },
+    group: [models.Corte.rawAttributes.id],
+    having: models.sequelize.fn('max', models.sequelize.col('Estados.updatedAt'))
   })
     .then((r) => { res.send(r) })
     .catch((r) => { res.send(r) })

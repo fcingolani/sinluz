@@ -79,7 +79,7 @@ async function scrape(distribuidoraNombre) {
 
     } else {
 
-      b.finishedAt = moment().unix();
+      b.finishedAt = cortes.meta.updatedAt;
       await b.save({ transaction: t });
 
     }
