@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const _ = require('lodash');
 const moment = require('moment');
+const Sequelize = require('sequelize');
 
 const enre = require('../lib/enre');
 const generateCiudadId = require('../lib/generate-ciudad-id');
@@ -67,12 +68,28 @@ async function scrape(distribuidoraNombre) {
     if (b._fetched) {
 
       try {
-        await b.createEstado({
-          afectados: b._fetched.afectados,
-          updatedAt: cortes.meta.updatedAt
-        }, {
-            transaction: t
-          });
+        let prevEstado = await models.Estado.findOne({
+          where: {
+            corteId: b.id,
+            updatedAt: {
+              [Sequelize.Op.lte]: cortes.meta.updatedAt
+            }
+          },
+          order: models.sequelize.literal('updatedAt DESC')
+        });
+
+        if (prevEstado.afectados != b._fetched.afectados) {
+          await b.createEstado({
+            afectados: b._fetched.afectados,
+            updatedAt: cortes.meta.updatedAt
+          }, {
+              transaction: t
+            });
+        } else {
+          console.log("No cambió la cantidad de afectados");
+        }
+
+
       } catch (e) {
         console.error("Error al crear estado");
       }

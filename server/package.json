@@ -13,7 +13,7 @@
     "moment-timezone": "^0.5.13",
     "request": "^2.81.0",
     "restify": "^6.0.0",
-    "sequelize": "^4.8.0",
+    "sequelize": "^4.13.8",
     "sequelize-cli": "^3.0.0-2",
     "sqlite3": "^3.1.9"
   }
