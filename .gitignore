@@ -1,6 +1,7 @@
 ui
 .vscode
 
+**/*.env
 **/*.sqlite
 
 **/local

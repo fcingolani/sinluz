@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 let restify = require('restify');
 let bunyan = require('bunyan');
 let _ = require('lodash');
@@ -10,6 +12,18 @@ server.use((req, res, next) => {
   res.charSet('utf-8');
   next();
 })
+
+const corsMiddleware = require('restify-cors-middleware')
+
+if (process.env.CORS_ORIGINS) {
+  const cors = corsMiddleware({
+    preflightMaxAge: 5,
+    origins: process.env.CORS_ORIGINS.split(','),
+  });
+
+  server.pre(cors.preflight);
+  server.use(cors.actual);
+}
 
 let log = bunyan.createLogger({
   name: 'sinluz'
@@ -27,6 +41,8 @@ server.get('/cortes/activos', (req, res, next) => {
   models.Corte.findAll({
     include: [{
       model: models.Estado
+    }, {
+      model: models.Ciudad
     }],
     where: {
       finishedAt: null
