@@ -78,7 +78,7 @@ async function scrape(distribuidoraNombre) {
           order: models.sequelize.literal('updatedAt DESC')
         });
 
-        if (prevEstado.afectados != b._fetched.afectados) {
+        if (!prevEstado || (prevEstado.afectados != b._fetched.afectados)) {
           await b.createEstado({
             afectados: b._fetched.afectados,
             updatedAt: cortes.meta.updatedAt

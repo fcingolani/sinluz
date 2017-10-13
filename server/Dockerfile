@@ -2,7 +2,8 @@ FROM node:8.6-alpine
 
 ENV NODE_ENV="production" \
   DB_FILE="/var/sinluz/db.sqlite" \
-  CRON_SCRAPE_SCHEDULE=""
+  CRON_SCRAPE_SCHEDULE="" \
+  CORS_ORIGINS=""
 
 COPY . /usr/src/sinluz
 
