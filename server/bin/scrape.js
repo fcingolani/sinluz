@@ -106,9 +106,40 @@ async function scrape(distribuidoraNombre) {
   await t.commit();
 }
 
+async function repair() {
+
+  let t = await models.sequelize.transaction();
+
+  let brokenBlackouts = await models.Corte.findAll({
+    where: {
+      '$Ciudad.partidoNombre$': { $eq: null }
+    },
+    include: [{
+      model: models.Ciudad
+    }],
+    transaction: t
+  });
+
+  for (var b of brokenBlackouts) {
+    let n = b.ciudadId.split('/');
+    let fixedCiudadId = generateCiudadId(n[0], n[1]);
+
+    if (fixedCiudadId != b.ciudadId) {
+      b.ciudadId = fixedCiudadId;
+      b.save();
+    }
+
+  }
+
+  await t.commit();
+
+}
+
 async function scrapeAll() {
   await scrape('edenor');
   await scrape('edesur');
+  await repair();
+
 }
 
 scrapeAll();
