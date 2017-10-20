@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const _ = require('lodash');
-const moment = require('moment');
 const Sequelize = require('sequelize');
 
 const enre = require('../lib/enre');
