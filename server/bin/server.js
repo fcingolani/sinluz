@@ -62,8 +62,8 @@ server.get('/cortes/_/ts/:timestamp', (req, res, next) => {
       model: models.Estado
     }],
     where: {
-      startedAt: { $gte: req.params.timestamp },
-      finishedAt: { $or: { $eq: null, $lt: req.params.timestamp } }
+      startedAt: { $lte: req.params.timestamp },
+      finishedAt: { $or: { $eq: null, $gt: req.params.timestamp } }
     },
     group: [models.Corte.rawAttributes.id],
     having: models.sequelize.fn('max', models.sequelize.col('Estados.updatedAt'))
