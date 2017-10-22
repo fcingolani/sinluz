@@ -6,6 +6,7 @@ let moment = require('moment-timezone');
 
 
 const $request = require('./srequest');
+const tz = 'America/Argentina/Buenos_Aires';
 
 function _extractCortes($, selector, tipo) {
 
@@ -59,7 +60,7 @@ function _extractCortes($, selector, tipo) {
 
       if (data['HORA ESTIMADA DE NORMALIZACION']) {
         let normalizacionEstimadaRaw = data['HORA ESTIMADA DE NORMALIZACION'];
-        let normalizacionEstimadaMoment = moment.tz(normalizacionEstimadaRaw, 'DD/MM/YYYY HH:mm', 'America/Argentina/Buenos_Aires');
+        let normalizacionEstimadaMoment = moment.tz(normalizacionEstimadaRaw, 'DD/MM/YYYY HH:mm', tz);
 
         if (normalizacionEstimadaMoment.isValid()) {
           corte.normalizacionEstimada = normalizacionEstimadaMoment.unix();
@@ -85,6 +86,8 @@ module.exports = {
 
   getCortes(nombreDistribuidora) {
 
+
+    let now = moment.tz(tz);
     let distribuidora = distribuidoras[nombreDistribuidora];
 
     if (distribuidora == null) {
@@ -92,11 +95,21 @@ module.exports = {
     }
 
     return $request(distribuidora.sourceURL).then($ => {
-      let ultimaActualizacionRaw = $('.nota').first().text();
-      let ultimaActualizacionMoment = moment.tz(ultimaActualizacionRaw, 'HH:mm', 'America/Argentina/Buenos_Aires');
-      let ultimaActualizacionStamp = ultimaActualizacionMoment.unix();
 
-      console.log(ultimaActualizacionStamp);
+      let ultimaActualizacionRaw = $('.nota').first().text().split(' ')[2];
+      let ultimaActualizacionMoment = moment(now);
+      let nowRaw = now.format('HH:mm');
+
+      if (nowRaw < ultimaActualizacionRaw) {
+        ultimaActualizacionMoment.subtract(1, 'd');
+      }
+
+      ultimaActualizacionRaw = ultimaActualizacionRaw.split(':');
+      ultimaActualizacionMoment.hour(ultimaActualizacionRaw[0]);
+      ultimaActualizacionMoment.minute(ultimaActualizacionRaw[1]);
+      ultimaActualizacionMoment.second(0);
+
+      let ultimaActualizacionStamp = ultimaActualizacionMoment.unix();
 
       let infoTDs = $('#Informacion_Superior td');
       let usuariosSinServicio = parseInt(infoTDs.first().text().replace(/\D/g, ''));
